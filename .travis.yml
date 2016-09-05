@@ -1,21 +1,36 @@
 language: php
+sudo: required
 
 php:
     - 5.6
     - 7.0
     - hhvm
 
+python:
+    - 3.4
+
 matrix:
     fast_finish: true
     allow_failures:
         - php: hhvm
+
+addons:
+  apt:
+    packages:
+        - wget
 
 cache:
     directories:
         - $HOME/.composer/cache
 
 before_install:
+    - sudo apt-get update
+    - sudo pip install ansible wget
+    - sudo apt-get install ruby rubygems
+    - sudo apt-get install virtualbox vagrant
+    - sudo vagrant plugin install landrush
     - phpenv config-rm xdebug.ini || true
-    - composer selfupdate
+    - sudo composer selfupdate
 
-install: composer update --prefer-dist --no-interaction --optimize-autoloader
+
+install: sudo composer update --prefer-dist --no-interaction --optimize-autoloader
