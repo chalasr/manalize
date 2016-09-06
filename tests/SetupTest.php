@@ -7,6 +7,9 @@ use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 
+/**
+ * @group infra
+ */
 class SetupTest extends \PHPUnit_Framework_TestCase
 {
     private static $cwd;
@@ -35,10 +38,6 @@ class SetupTest extends \PHPUnit_Framework_TestCase
         $tester
             ->setInputs(['manala', 'dummy'])
             ->execute(['work-dir' => static::$cwd]);
-
-        if (0 !== $tester->getStatusCode()) {
-            var_dump($tester->getDisplay());
-        }
 
         $this->assertSame(0, $tester->getStatusCode());
         $this->assertContains('Environment successfully created', $tester->getDisplay());
