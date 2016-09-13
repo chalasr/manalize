@@ -25,17 +25,11 @@ help:
 # Environment #
 ###############
 
-<<<<<<< HEAD
-## Setup environment & Install application
-setup: provision
-	vagrant ssh -c 'cd /srv/app/symfony && sudo composer self-update && make install'
-=======
 ## Setup environment & Install & Build application
 setup:
 	vagrant up --no-provision
 	vagrant provision
 	vagrant ssh -- "cd /srv/app && make install build"
->>>>>>> e4a9fbf... Switch to manala
 
 ## Update environment
 update: export ANSIBLE_TAGS = manala.update
@@ -70,7 +64,7 @@ install:
 	composer install --verbose
 	# Db
 	bin/console doctrine:database:create --if-not-exists
-	bin/console doctrine:migrations:migrate --allow-no-migration --no-interaction
+	# bin/console doctrine:migrations:migrate --allow-no-migration --no-interaction
 	# Db - Test
 	bin/console doctrine:database:create --if-not-exists --env=test
 	bin/console doctrine:schema:update --force --env=test

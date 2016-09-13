@@ -66,6 +66,7 @@ class SetupTest extends \PHPUnit_Framework_TestCase
     public static function tearDownAfterClass()
     {
         (new Process(sprintf('cd %s && vagrant destroy --force && cd %s', self::$cwd, getcwd())))->run();
-        (new Filesystem())->remove(self::$cwd);
+        var_dump(self::$cwd);
+        // (new Filesystem())->remove(self::$cwd);
     }
 }
