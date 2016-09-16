@@ -29,7 +29,7 @@ help:
 setup:
 	vagrant up --no-provision
 	vagrant provision
-	vagrant ssh -- "cd /srv/app && make install build"
+	vagrant ssh -- "cd /srv/app && make install"
 
 ## Update environment
 update: export ANSIBLE_TAGS = manala.update
@@ -69,11 +69,9 @@ install:
 	bin/console doctrine:database:create --if-not-exists --env=test
 	bin/console doctrine:schema:update --force --env=test
 	# Db - Fixtures
-	bin/console hautelook_alice:doctrine:fixtures:load --no-interaction
-	# GeoIP2
-	bin/console app:geoip2:download
+	#bin/console hautelook_alice:doctrine:fixtures:load --no-interaction
 	# Npm
-	npm install --no-spin
+	#npm install --no-spin
 
 install@test: SYMFONY_ENV = test
 install@test:

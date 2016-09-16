@@ -48,6 +48,10 @@ class SetupTest extends \PHPUnit_Framework_TestCase
             ->setInputs(['manala', 'dummy'])
             ->execute(['cwd' => static::$cwd]);
 
+        if (0 !== $tester->getStatusCode()) {
+            echo $tester->getDisplay();
+        }
+
         $this->assertSame(0, $tester->getStatusCode());
         $this->assertContains('Environment successfully created', $tester->getDisplay());
 
@@ -59,14 +63,12 @@ class SetupTest extends \PHPUnit_Framework_TestCase
         }
 
         $vagrantFile = file_get_contents(self::$cwd.'/Vagrantfile');
-        $this->assertContains(":vendor           => 'manala'", $vagrantFile);
-        $this->assertContains(":app              => 'dummy'", $vagrantFile);
+        $this->assertContains(":name        => 'dummy.manala'", $vagrantFile);
     }
 
     public static function tearDownAfterClass()
     {
         (new Process(sprintf('cd %s && vagrant destroy --force && cd %s', self::$cwd, getcwd())))->run();
-        var_dump(self::$cwd);
-        // (new Filesystem())->remove(self::$cwd);
+        (new Filesystem())->remove(self::$cwd);
     }
 }
