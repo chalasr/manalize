@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Manala\Command;
+namespace Manala\Manalize\Command;
 
-use Manala\Config\Vars;
-use Manala\Env\EnvEnum;
-use Manala\Env\EnvFactory;
-use Manala\Process\Setup as SetupProcess;
+use Manala\Manalize\Config\Vars;
+use Manala\Manalize\Env\EnvEnum;
+use Manala\Manalize\Env\EnvFactory;
+use Manala\Manalize\Process\Setup as SetupProcess;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -36,10 +36,9 @@ class Setup extends Command
     protected function configure()
     {
         $this
-            ->setName('setup')
-            ->setDescription('Configures your environment on top of Manala ansible roles')
-            ->addArgument('cwd', InputArgument::OPTIONAL, 'The path of the application for which to setup the environment', getcwd())
-            ->addOption('env', null, InputOption::VALUE_OPTIONAL, 'One of the supported environment types', 'symfony');
+            ->setName('build')
+            ->setDescription('Build your manala environment')
+            ->addArgument('cwd', InputArgument::OPTIONAL, 'The path of the application for which to build the environment', getcwd())
     }
 
     /**
@@ -55,19 +54,40 @@ class Setup extends Command
         }
 
         $io = new SymfonyStyle($input, $output);
-        $io->setDecorated(true);
-        $io->comment(sprintf('Composing your <info>%s</info> environment', (string) $envType));
+        $io->comment('<info>Building your application</info>');
 
-        $vars = new Vars($io->ask('Vendor name', null, [$this, 'validateVar']), $io->ask('App name', null, [$this, 'validateVar']));
-        $process = new SetupProcess($cwd);
+        $process = new BuildProcess($cwd);
 
-        foreach ($this->doSetup(EnvFactory::createEnv($envType), $vars, $cwd) as $targetFile) {
-            $io->writeln(sprintf('- %s', str_replace($cwd.DIRECTORY_SEPARATOR, '', $targetFile)));
+        foreach ($process->run() as $buffer) {
+            $io->write($buffer);
+        }
+
+        if (!$process->isSuccessful()) {
+            $io->warning(['An error occured during the process execution:', $process->getErrorOutput()]);
+
+            return $process->getExitCode();
         }
 
         $io->success('Environment successfully created');
 
-        return 0;
+        return $process->getExitCode();
+    }
+
+    /**
+     * Ensures storage directories are empty, otherwise remove them.
+     *
+     * @param Filesystem $fs
+     */
+    protected function emptyStorageDirectories($cwd)
+    {
+        $fs = new Filesystem();
+        $rootStorageDir = is_readable($cwd.'/var') ? $cwd.'/var' : $cwd.'/app';
+
+        foreach (['/cache', '/logs'] as $dir) {
+            if ($fs->exists($rootStorageDir.$dir)) {
+                $fs->remove($rootStorageDir.$dir);
+            }
+        }
     }
 
     /**
@@ -86,31 +106,5 @@ class Setup extends Command
         }
 
         return $value;
-    }
-
-    /**
-     * Prepare configuration dumps for the given process.
-     *
-     * @param Env  $env
-     * @param Vars $vars
-     *
-     * @return \Generator The dumped file path
-     */
-    private function doSetup(Env $env, Vars $vars, $cwd)
-    {
-        $fs = new Filesystem();
-
-        foreach ($env->getConfigs() as $config) {
-            $baseTarget = $cwd.DIRECTORY_SEPARATOR.$config->getPath();
-            $template = $config->getTemplate();
-
-            foreach ($config->getFiles() as $file) {
-                $target = str_replace($config->getOrigin(), $baseTarget, $file->getPathName());
-                $dump = ((string) $template === $file->getRealPath()) ? Dumper::dump($config, $vars) : file_get_contents($file);
-                $fs->dumpFile($target, $dump);
-
-                yield $target;
-            }
-        }
     }
 }
