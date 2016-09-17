@@ -38,9 +38,6 @@ manala_deploy_shared_files:
 
 manala_deploy_shared_dirs:
   - var/logs
-  - var/geoip2
-  - web/landing-pages
-  - web/media
 
 ############
 # Writable #
@@ -49,6 +46,4 @@ manala_deploy_shared_dirs:
 manala_deploy_writable_dirs_mode: ug=rwx,o=rx
 manala_deploy_writable_dirs:
   - var/cache
-  - var/geoip2
-  - web/landing-pages
-  - web/media
+  - var/logs

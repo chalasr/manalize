@@ -15,5 +15,5 @@ manala_deploy_removed:
 
 manala_deploy_tasks:
   - make: install@prod
-  - make: build@prod
+  - make: assets@prod
   - service_restart: supervisor

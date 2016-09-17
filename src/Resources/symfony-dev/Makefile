@@ -62,29 +62,22 @@ provision-php: provision
 install:
 	# Composer
 	composer install --verbose
-	# Db
+	# Doctrine
 	bin/console doctrine:database:create --if-not-exists
-	# bin/console doctrine:migrations:migrate --allow-no-migration --no-interaction
-	# Db - Test
+	# Doctrine - Test
 	bin/console doctrine:database:create --if-not-exists --env=test
 	bin/console doctrine:schema:update --force --env=test
-	# Db - Fixtures
-	#bin/console hautelook_alice:doctrine:fixtures:load --no-interaction
 	# Npm
-	#npm install --no-spin
+	if [ -a "package.json" ]; then npm install --no-spin; fi;
 
 install@test: SYMFONY_ENV = test
 install@test:
 	# Composer
 	composer install --verbose --no-progress --no-interaction
-	# Db
+	# Doctrine
 	bin/console doctrine:database:drop --force --if-exists
 	bin/console doctrine:database:create --if-not-exists
 	bin/console doctrine:schema:update --force
-	# GeoIP2
-	bin/console app:geoip2:download
-	# Npm
-	npm install --no-spin
 
 install@demo: SYMFONY_ENV = prod
 install@demo:
@@ -94,10 +87,6 @@ install@demo:
 	bin/console cache:warmup --no-debug
 	# Doctrine migrations
 	bin/console doctrine:migrations:migrate --no-debug --no-interaction
-	# GeoIP2
-	bin/console app:geoip2:download
-	# Npm
-	npm install --no-spin
 
 install@prod: SYMFONY_ENV = prod
 install@prod:
@@ -107,78 +96,25 @@ install@prod:
 	bin/console cache:warmup --no-debug
 	# Doctrine migrations
 	bin/console doctrine:migrations:migrate --no-debug --no-interaction
-	# GeoIP2
-	bin/console app:geoip2:download
-	# Npm
-	npm install --no-spin
 
-#########
-# Build #
-#########
+##########
+# Assets #
+##########
 
-## Build application
-build:
-	gulp --dev
+## Build assets
+assets:
+	if [ -a "gulpfile" ]; then gulp --dev; fi;
 
-build@demo: SYMFONY_ENV = prod
-build@demo:
-	gulp
-
-build@prod: SYMFONY_ENV = prod
-build@prod:
-	gulp
-
-############
-# Security #
-############
-
-## Run security checks
-security:
-	security-checker security:check
-
-security@test: SYMFONY_ENV = test
-security@test: security
-
-########
-# Lint #
-########
-
-## Lint
-lint:
-
-lint@test: SYMFONY_ENV = test
-lint@test:
-
-########
-# Test #
-########
-
-## Run tests
-test: SYMFONY_ENV = test
-test:
-	# PHPUnit
-	-bin/phpunit
-	# Behat
-	-bin/behat
-
-test@test: SYMFONY_ENV = test
-test@test:
-	# PHPUnit
-	rm -Rf build/phpunit && mkdir -p build/phpunit
-	stty cols 80 && bin/phpunit --log-junit build/phpunit/junit.xml --coverage-clover build/phpunit/clover.xml --coverage-html build/phpunit/coverage
-	# Behat
-	rm -Rf build/behat && mkdir -p build/behat
-	bin/console cache:clear && bin/behat --format=junit --out=build/behat --no-interaction
+assets@prod: SYMFONY_ENV = prod
+assets@prod:
+	if [ -a "gulpfile" ]; then gulp; fi;
 
 ##########
 # Deploy #
 ##########
 
-## Deploy application (demo)
-deploy@demo:
-	ansible-playbook ansible/deploy.yml --inventory-file=ansible/hosts --limit=deploy_demo
-
-## Deploy application (prod)
+## Deploy application
+deploy: deploy@prod
 deploy@prod:
 	ansible-playbook ansible/deploy.yml --inventory-file=ansible/hosts --limit=deploy_prod
 
