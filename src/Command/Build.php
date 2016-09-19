@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Manala\Manalize\Command;
+namespace Manala\Command;
 
-use Manala\Manalize\Config\Vars;
-use Manala\Manalize\Env\EnvEnum;
-use Manala\Manalize\Env\EnvFactory;
-use Manala\Manalize\Process\Setup as SetupProcess;
+use Manala\Config\Vars;
+use Manala\Env\EnvEnum;
+use Manala\Env\EnvFactory;
+use Manala\Process\Build as BuildProcess;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -28,7 +28,7 @@ use Symfony\Component\Filesystem\Filesystem;
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
-class Setup extends Command
+class Build extends Command
 {
     /**
      * {@inheritdoc}
@@ -37,8 +37,8 @@ class Setup extends Command
     {
         $this
             ->setName('build')
-            ->setDescription('Build your manala environment')
-            ->addArgument('cwd', InputArgument::OPTIONAL, 'The path of the application for which to build the environment', getcwd())
+            ->setDescription('Manalize your application on top of Manala')
+            ->addArgument('cwd', InputArgument::OPTIONAL, 'The path of the application to manalize', getcwd());
     }
 
     /**
@@ -47,20 +47,23 @@ class Setup extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $cwd = realpath($input->getArgument('cwd'));
-        $envType = EnvEnum::create($input->getOption('env'));
 
         if (!is_dir($cwd)) {
             throw new \RuntimeException(sprintf('The working directory "%s" doesn\'t exist.', $cwd));
         }
 
+        // TODO: In {@link Setup}, generates a .manala.yml then retrieve the env type for this check
+        // if ($envType->is(EnvEnum::SYMFONY)) {
+            $this->emptyStorageDirectories($cwd);
+        // }
+
         $io = new SymfonyStyle($input, $output);
         $io->comment('<info>Building your application</info>');
 
         $process = new BuildProcess($cwd);
-
-        foreach ($process->run() as $buffer) {
+        $process->run(function ($type, $buffer) use ($io) {
             $io->write($buffer);
-        }
+        });
 
         if (!$process->isSuccessful()) {
             $io->warning(['An error occured during the process execution:', $process->getErrorOutput()]);

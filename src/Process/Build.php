@@ -9,12 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Manala\Manalize\Process;
+namespace Manala\Process;
 
-use Manala\Manalize\Config\Config;
-use Manala\Manalize\Config\Dumper;
-use Manala\Manalize\Config\Vars;
-use Manala\Manalize\Env\Env;
+use Manala\Config\Config;
+use Manala\Config\Dumper;
+use Manala\Config\Vars;
+use Manala\Env\Env;
+use Manala\Process\Task\VagrantTask;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 
@@ -23,16 +24,35 @@ use Symfony\Component\Process\Process;
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
-class Build extends Process
+class Build
 {
+    /**
+     * @var Process[]
+     */
+    private $subProcesses = [];
+
+    /**
+     * @var int
+     */
+    private $lastExitCode;
+
+    /**
+     * @var string
+     */
+    private $errorOutput;
+
     /**
      * @param string $cwd
      */
-    public function __construct($cwd)
+    public function __construct($cwd, $tasks = [])
     {
-        parent::__construct('make setup', $cwd);
+        $vagrantTasks = [
+            'up --no-provision',
+            'provision',
+            'ssh -- "cd /srv/app && make install"'
+        ];
 
-        $this->setTimeout(null);
+        $this->createSubProcesses(array_merge($vagrantTasks, $tasks), $cwd);
     }
 
     /**
@@ -42,8 +62,37 @@ class Build extends Process
      */
     public function run($callback = null)
     {
-        parent::start();
+        foreach ($this->subProcesses as $process) {
+            $process->run($callback);
+            $this->lastExitCode = $process->getExitCode();
 
-        return $this;
+            if (!$process->isSuccessful()) {
+                $this->errorOutput = $process->getErrorOutput();
+
+                break;
+            }
+        }
+    }
+
+    public function getExitCode()
+    {
+        return $this->lastExitCode;
+    }
+
+    public function isSuccessful()
+    {
+        return 0 === $this->lastExitCode;
+    }
+
+    public function getErrorOutput()
+    {
+        return $this->errorOutput;
+    }
+
+    private function createSubProcesses(array $vagrantTasks, $cwd)
+    {
+        foreach ($vagrantTasks as $task) {
+            $this->subProcesses[] = new VagrantTask($task, $cwd, null);
+        }
     }
 }
