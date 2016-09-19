@@ -52,13 +52,11 @@ class Build extends Command
             throw new \RuntimeException(sprintf('The working directory "%s" doesn\'t exist.', $cwd));
         }
 
-        // TODO: In {@link Setup}, generates a .manala.yml then retrieve the env type for this check
-        // if ($envType->is(EnvEnum::SYMFONY)) {
-            $this->emptyStorageDirectories($cwd);
-        // }
+        // TODO: In {@link Setup}, generates a .manala.yml with the env type then check guess storage dirs
+        $this->emptyStorageDirectories($cwd);
 
         $io = new SymfonyStyle($input, $output);
-        $io->comment('<info>Building your application</info>');
+        $io->comment('<info>Building your environment</info>');
 
         $process = new BuildProcess($cwd);
         $process->run(function ($type, $buffer) use ($io) {
@@ -71,7 +69,7 @@ class Build extends Command
             return $process->getExitCode();
         }
 
-        $io->success('Environment successfully created');
+        $io->success('Environment successfully built');
 
         return $process->getExitCode();
     }
@@ -79,7 +77,7 @@ class Build extends Command
     /**
      * Ensures storage directories are empty, otherwise remove them.
      *
-     * @param Filesystem $fs
+     * @param string $cwd
      */
     protected function emptyStorageDirectories($cwd)
     {
@@ -105,7 +103,7 @@ class Build extends Command
     public function validateVar($value)
     {
         if (!preg_match('/^([-A-Z0-9])*$/i', $value)) {
-            throw new RuntimeException(sprintf('This value must contain only alphanumeric characters and hyphens.', $value));
+            throw new \RuntimeException(sprintf('This value must contain only alphanumeric characters and hyphens.', $value));
         }
 
         return $value;

@@ -13,6 +13,8 @@ namespace Manala\Command;
 
 use Manala\Config\Vars;
 use Manala\Env\EnvEnum;
+use Manala\Config\Dumper;
+use Manala\Env\Env;
 use Manala\Env\EnvFactory;
 use Manala\Process\Setup as SetupProcess;
 use Symfony\Component\Console\Command\Command;
@@ -65,7 +67,7 @@ class Setup extends Command
             $io->writeln(sprintf('- %s', str_replace($cwd.DIRECTORY_SEPARATOR, '', $targetFile)));
         }
 
-        $io->success('Environment successfully created');
+        $io->success('Environment successfully configured');
 
         return 0;
     }
