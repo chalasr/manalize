@@ -31,7 +31,7 @@ class Renderer
     {
         $template = $config->getTemplate();
 
-        if (!is_writable($template) || !is_readable($template)) {
+        if (!is_readable($template)) {
             throw new \RuntimeException(sprintf('The template file "%s" is either not readable, not writable or it doesn\'t exist.', $template));
         }
 

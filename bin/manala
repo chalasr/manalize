@@ -15,6 +15,8 @@ require_once __DIR__.'/../vendor/autoload.php';
 use Manala\Command;
 use Symfony\Component\Console\Application;
 
+define('MANALA_DIR', \Phar::running() ?: __DIR__.'/../');
+
 $app = new Application('manala/manala', '1.0.0');
 $app->addCommands([
     new Command\Setup(),
