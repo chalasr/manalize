@@ -52,7 +52,7 @@ abstract class Config
      */
     public function getOrigin()
     {
-        return MANALA_DIR.sprintf('/src/Resources/%s/%s', $this->envType, $this->getPath());
+        return __DIR__.'/../Resources/'.$this->envType.'/'.$this->getPath();
     }
 
     /**
