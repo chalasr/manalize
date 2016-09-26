@@ -15,7 +15,7 @@ use Manala\Handler\Task\VagrantTask;
 use Symfony\Component\Process\Process;
 
 /**
- * Build Handler, firstly intended to be consummed by the Build command.
+ * Build Handler, firstly intended to be consumed by the Build command.
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
