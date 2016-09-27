@@ -80,30 +80,26 @@ class CheckRequirements extends Command
      */
     private function getRequirements()
     {
-        // @TODO: see https://github.com/composer/semver and adopt it for version requirements
         return [
             new Requirement(
                 'vagrant',
                 Requirement::TYPE_BINARY,
                 RequirementLevel::REQUIRED,
-                '1.8.4',
-                '>=',
+                '>= 1.8.0 < 1.8.5 || ^1.8.6', // /!\ Exclude vagrant 1.8.5 (Manala incompatible)
                 'See https://www.vagrantup.com/downloads.html'
             ),
             new Requirement(
                 'landrush',
                 Requirement::TYPE_VAGRANT_PLUGIN,
                 RequirementLevel::REQUIRED,
-                '0.18.0',
-                '>=',
+                '^0.18',
                 'See https://github.com/vagrant-landrush/landrush'
             ),
             new Requirement(
                 'ansible',
                 Requirement::TYPE_BINARY,
                 RequirementLevel::RECOMMENDED,
-                '2.0.0',
-                '>=',
+                '^2.0.0',
                 'Required only if you intend to use the deploy role. See http://docs.ansible.com/ansible/intro_installation.html'
             ),
         ];

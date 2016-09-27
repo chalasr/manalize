@@ -16,6 +16,7 @@ use Manala\Config\Requirement\Factory\HandlerFactoryResolver;
 use Manala\Config\Requirement\Violation\RequirementViolation;
 use Manala\Config\Requirement\Violation\RequirementViolationLabelBuilder;
 use Manala\Config\Requirement\Violation\RequirementViolationList;
+use Composer\Semver\Semver;
 
 /**
  * Service that checks if the current host's environment satisfies a requirement.
@@ -61,7 +62,7 @@ class RequirementChecker
 
         $versionParser = $handlerFactory->getVersionParser();
         $version = $versionParser->getVersion($requirement->getName(), $output);
-        if (!version_compare($version, $requirement->getRequiredVersion(), $requirement->getVersionComparator())) {
+        if (!SemVer::satisfies($version, $requirement->getSemanticVersion())) {
             $violationList->addViolation($this->createViolation($requirement, $version));
 
             return;

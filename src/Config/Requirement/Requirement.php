@@ -30,18 +30,21 @@ class Requirement implements Common\RequirementLevelHolderInterface
      */
     private $name;
 
-    /** @var string */
-    private $requiredVersion;
-
-    /** @var string */
-    private $versionComparator;
+    /**
+     * Example: '^1.8.2', '~1.8', etc.
+     *
+     * @see https://getcomposer.org/doc/articles/versions.md
+     *
+     * @var string
+     */
+    private $semanticVersion;
 
     /** @var string */
     private $type;
 
     /**
-     * An optional help to display to the user if the binary is missing or if its version is inferior to the
-     * required one. It can be for instance a link to the binary's download page.
+     * An optional help to display to the user if the executable is missing or if its version is inferior to the
+     * required one. It can be for instance a link to the executable's download page.
      *
      * @var string|null
      */
@@ -51,23 +54,20 @@ class Requirement implements Common\RequirementLevelHolderInterface
      * @param string      $name
      * @param string      $type
      * @param int         $level
-     * @param string      $requiredVersion
-     * @param string      $versionComparator
+     * @param string      $semanticVersion
      * @param string|null $help
      */
     public function __construct(
         $name,
         $type,
         $level,
-        $requiredVersion = '0.0.0',
-        $versionComparator = '>=',
+        $semanticVersion,
         $help = null
     ) {
         $this->name = $name;
         $this->type = $type;
         $this->level = $level;
-        $this->requiredVersion = $requiredVersion;
-        $this->versionComparator = $versionComparator;
+        $this->semanticVersion = $semanticVersion;
         $this->help = $help;
     }
 
@@ -90,17 +90,9 @@ class Requirement implements Common\RequirementLevelHolderInterface
     /**
      * @return string
      */
-    public function getRequiredVersion()
+    public function getSemanticVersion()
     {
-        return $this->requiredVersion;
-    }
-
-    /**
-     * @return string
-     */
-    public function getVersionComparator()
-    {
-        return $this->versionComparator;
+        return $this->semanticVersion;
     }
 
     /**

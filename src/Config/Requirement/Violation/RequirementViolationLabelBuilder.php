@@ -44,7 +44,7 @@ class RequirementViolationLabelBuilder
                 ,
                 $requirement->getName(),
                 $currentVersion,
-                $requirement->getRequiredVersion()
+                $requirement->getSemanticVersion()
             );
         }
 
