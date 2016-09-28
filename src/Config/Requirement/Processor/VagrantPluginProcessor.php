@@ -22,8 +22,8 @@ class VagrantPluginProcessor extends AbstractProcessor
     {
         $output = parent::process($name);
 
-        // If output is empty, it means that the vagrant plugin identified by $name is not installed:
-        if ($output == '') {
+        // If output does not contain '$name', it means that the vagrant plugin is not installed:
+        if (false === strpos($output, $name)) {
             throw new MissingRequirementException();
         }
 
@@ -35,6 +35,6 @@ class VagrantPluginProcessor extends AbstractProcessor
      */
     public function getCommand($name)
     {
-        return sprintf('vagrant plugin list | grep %s', $name);
+        return 'vagrant plugin list';
     }
 }

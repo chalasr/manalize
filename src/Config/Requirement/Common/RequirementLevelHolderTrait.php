@@ -33,11 +33,11 @@ trait RequirementLevelHolderTrait
      */
     public function getLevelLabel()
     {
-        switch($this->level) {
+        switch ($this->level) {
             case RequirementLevel::RECOMMENDED:
-                return "Recommended";
-            case RequirementLevel::REQUIRED;
-                return "Required";
+                return 'Recommended';
+            case RequirementLevel::REQUIRED:
+                return 'Required';
         }
     }
 

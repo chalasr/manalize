@@ -18,23 +18,25 @@ use Manala\Config\Requirement\Common\RequirementLevel;
  *
  * @author Xavier Roldo <xavier.roldo@elao.com>
  */
-class RequirementViolationList implements \Iterator, \ArrayAccess, \Countable
+class RequirementViolationList extends \ArrayObject
 {
-    /** @var int */
-    private $position;
-
-    /** @var RequirementViolation[] */
-    private $violations = [];
-
-    public function __construct()
+    /**
+     * {@inheritdoc}
+     *
+     * @param RequirementViolation[] $violations
+     */
+    public function __construct(array $violations = [])
     {
-        $this->rewind();
-        $this->violations = [];
+        parent::__construct();
+
+        foreach ($violations as $violation) {
+            $this->addViolation($violation);
+        }
     }
 
     public function addViolation(RequirementViolation $violation)
     {
-        $this->violations[] = $violation;
+        $this->append($violation);
     }
 
     /**
@@ -42,7 +44,7 @@ class RequirementViolationList implements \Iterator, \ArrayAccess, \Countable
      */
     public function getViolations()
     {
-        return $this->violations;
+        return $this->getArrayCopy();
     }
 
     /**
@@ -52,7 +54,7 @@ class RequirementViolationList implements \Iterator, \ArrayAccess, \Countable
      */
     private function containsViolations($level)
     {
-        foreach ($this->violations as $violation) {
+        foreach ($this->getViolations() as $violation) {
             if ($violation->getLevel() === $level) {
                 return true;
             }
@@ -76,101 +78,4 @@ class RequirementViolationList implements \Iterator, \ArrayAccess, \Countable
     {
         return $this->containsViolations(RequirementLevel::RECOMMENDED);
     }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return RequirementViolation
-     */
-    public function current()
-    {
-        return $this->violations[$this->position];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function next()
-    {
-        ++$this->position;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function key()
-    {
-        return $this->position;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function valid()
-    {
-        return isset($this->violations[$this->position]);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function rewind()
-    {
-        $this->position = 0;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function count()
-    {
-        return count($this->violations);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function offsetExists($offset)
-    {
-        return isset($this->violations[$offset]);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function offsetGet($offset)
-    {
-        return isset($this->violations[$offset]) ? $this->violations[$offset] : null;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @param int                  $offset
-     * @param RequirementViolation $value
-     */
-    public function offsetSet($offset, $value)
-    {
-        if (!$value instanceof RequirementViolation) {
-            throw new \InvalidArgumentException();
-        }
-
-        if ($offset === null) {
-            $this->violations[] = $value;
-
-            return;
-        }
-
-        $this->violations[$offset] = $value;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function offsetUnset($offset)
-    {
-        unset($this->violations[$offset]);
-    }
-
-
 }

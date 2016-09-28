@@ -14,7 +14,7 @@ namespace Manala\Config\Requirement\SemVer;
 class VagrantPluginVersionParser implements VersionParserInterface
 {
     /**
-     * Example: landrush (0.18.0)
+     * Example: landrush (0.18.0).
      */
     const OUTPUT_PATTERN = '/%s\s\(([0-9]+\.[0-9]+\.[0-9]+)\)/';
 

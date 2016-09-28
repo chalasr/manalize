@@ -34,17 +34,19 @@ class VagrantPluginVersionParserTest extends \PHPUnit_Framework_TestCase
         return [
             [
                 'landrush',
-                'landrush (0.18.0)',
+                'landrush (0.18.0)
+                 vagrant-share (1.1.5, system)',
                 '0.18.0',
             ],
             [
                 'vagrant-plugin',
-                "vagrant-plugin (1.11.15)",
+                'vagrant-share (1.1.5, system)
+                 vagrant-plugin (1.11.15)',
                 '1.11.15',
             ],
             [
                 'anotherPlugin',
-                "anotherPlugin (1.9.14)",
+                'anotherPlugin (1.9.14)',
                 '1.9.14',
             ],
         ];

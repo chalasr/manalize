@@ -23,8 +23,6 @@ class VagrantPluginHandlerFactory implements HandlerFactoryInterface
 {
     /**
      * {@inheritdoc}
-     *
-     * @return VagrantPluginProcessor
      */
     public function getProcessor()
     {
@@ -33,8 +31,6 @@ class VagrantPluginHandlerFactory implements HandlerFactoryInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @return VagrantPluginVersionParser
      */
     public function getVersionParser()
     {

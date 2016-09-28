@@ -12,7 +12,7 @@
 namespace Manala\Config\Requirement\Common;
 
 /**
- * Interface to be implemented by requirement level holders (Eg Requirement, Violation)
+ * Interface to be implemented by requirement level holders (Eg Requirement, Violation).
  */
 interface RequirementLevelHolderInterface
 {

@@ -20,13 +20,13 @@ abstract class AbstractProcessor
      * Process a required or suggested executable identified by its name (vagrant, ansible, etc.), i.e. run the proper
      * console command in order to test if it is available on the current host. Each concrete processor is responsible
      * for running the proper console command (eg `<binary> --version` for an executable, `vagrant plugin list for a`
-     * vagrant plugin, etc.)
+     * vagrant plugin, etc.).
      *
      * @param string $name The name of the binary (or vagrant plugin or ...) to check
      *
      * @throws MissingRequirementException When processed command is unsuccessful
      *
-     * @return string|null Returns the standard output if tool is available, false otherwise.
+     * @return string The processing command's output if executable is available
      */
     public function process($name)
     {
@@ -35,7 +35,7 @@ abstract class AbstractProcessor
         $process->run();
 
         if (!$process->isSuccessful()) {
-            throw new MissingRequirementException();
+            return $this->handleCommandFailure($process->getErrorOutput());
         }
 
         return $process->getOutput();
@@ -49,4 +49,22 @@ abstract class AbstractProcessor
      * @return string
      */
     abstract public function getCommand($name);
+
+    /**
+     * Override this method in concrete processor implementations if you want to grant a last chance to obtain
+     * information about the executable from the error output.
+     *
+     * Default hereby implementation treats any process failure as a missing executable and therefore throws a
+     * MissingRequirementException.
+     *
+     * @param string $errorOutput
+     *
+     * @throws MissingRequirementException
+     *
+     * @return string
+     */
+    protected function handleCommandFailure($errorOutput)
+    {
+        throw new MissingRequirementException();
+    }
 }

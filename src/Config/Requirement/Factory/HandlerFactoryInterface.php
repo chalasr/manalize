@@ -11,8 +11,8 @@
 
 namespace Manala\Config\Requirement\Factory;
 
-use Manala\Config\Requirement\SemVer\VersionParserInterface;
 use Manala\Config\Requirement\Processor\AbstractProcessor;
+use Manala\Config\Requirement\SemVer\VersionParserInterface;
 
 /**
  * Interface for factories that instantiate the proper processor and version parser for a given type of requirement

@@ -39,16 +39,16 @@ class BinaryVersionParserTest extends \PHPUnit_Framework_TestCase
             ],
             [
                 'php',
-                "PHP 7.0.8 (cli) (built: Jun 23 2016 16:32:40) ( NTS )
+                'PHP 7.0.8 (cli) (built: Jun 23 2016 16:32:40) ( NTS )
                  Copyright (c) 1997-2016 The PHP Group
-                 Zend Engine v3.0.0, Copyright (c) 1998-2016 Zend Technologies",
-                '7.0.8'
+                 Zend Engine v3.0.0, Copyright (c) 1998-2016 Zend Technologies',
+                '7.0.8',
             ],
             [
                 'ansible',
-                "ansible 1.9.4
-                configured module search path = None",
-                '1.9.4'
+                'ansible 1.9.4
+                configured module search path = None',
+                '1.9.4',
             ],
         ];
     }

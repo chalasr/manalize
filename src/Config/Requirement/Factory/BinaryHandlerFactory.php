@@ -23,8 +23,6 @@ class BinaryHandlerFactory implements HandlerFactoryInterface
 {
     /**
      * {@inheritdoc}
-     *
-     * @return BinaryProcessor
      */
     public function getProcessor()
     {
@@ -33,8 +31,6 @@ class BinaryHandlerFactory implements HandlerFactoryInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @return BinaryVersionParser
      */
     public function getVersionParser()
     {

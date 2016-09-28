@@ -14,7 +14,7 @@ namespace Manala\Config\Requirement\SemVer;
 class BinaryVersionParser implements VersionParserInterface
 {
     /**
-     * Example: ansible 1.9.4 [...]
+     * Example: ansible 1.9.4 [...].
      */
     const OUTPUT_PATTERN = '/^[a-zA-Z0-9]+\s([0-9]+\.[0-9]+\.[0-9]+)/';
 

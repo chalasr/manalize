@@ -11,14 +11,14 @@
 
 namespace Manala\Command;
 
-use Manala\Config\Requirement\Common\RequirementLevel;
 use Manala\Config\Requirement\Factory\HandlerFactoryResolver;
-use Manala\Config\Requirement\Requirement;
 use Manala\Config\Requirement\RequirementChecker;
+use Manala\Config\Requirement\RequirementRepository;
 use Manala\Config\Requirement\Violation\RequirementViolation;
 use Manala\Config\Requirement\Violation\RequirementViolationLabelBuilder;
 use Manala\Config\Requirement\Violation\RequirementViolationList;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Formatter\OutputFormatterInterface;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -46,7 +46,7 @@ class CheckRequirements extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->addFormatter($output);
+        $this->configureFormatter($output->getFormatter());
 
         $violationList = new RequirementViolationList();
         $requirementChecker = new RequirementChecker(
@@ -54,8 +54,8 @@ class CheckRequirements extends Command
             new RequirementViolationLabelBuilder()
         );
 
-        foreach($this->getRequirements() as $requirement) {
-            $output->writeln('Checking ' . $requirement->getName());
+        foreach (RequirementRepository::getRequirements() as $requirement) {
+            $output->writeln('Checking '.$requirement->getName());
             $requirementChecker->check($requirement, $violationList);
         }
 
@@ -72,63 +72,31 @@ class CheckRequirements extends Command
                 $output->writeln('Yet, some recommendations have been emitted (see above).');
             }
         }
-
     }
 
     /**
-     * @return Requirement[]
+     * @param OutputFormatterInterface $formatter
      */
-    private function getRequirements()
-    {
-        return [
-            new Requirement(
-                'vagrant',
-                Requirement::TYPE_BINARY,
-                RequirementLevel::REQUIRED,
-                '>= 1.8.0 < 1.8.5 || ^1.8.6', // /!\ Exclude vagrant 1.8.5 (Manala incompatible)
-                'See https://www.vagrantup.com/downloads.html'
-            ),
-            new Requirement(
-                'landrush',
-                Requirement::TYPE_VAGRANT_PLUGIN,
-                RequirementLevel::REQUIRED,
-                '^0.18',
-                'See https://github.com/vagrant-landrush/landrush'
-            ),
-            new Requirement(
-                'ansible',
-                Requirement::TYPE_BINARY,
-                RequirementLevel::RECOMMENDED,
-                '^2.0.0',
-                'Required only if you intend to use the deploy role. See http://docs.ansible.com/ansible/intro_installation.html'
-            ),
-        ];
-    }
-
-    /**
-     * @param OutputInterface $output
-     */
-    private function addFormatter(OutputInterface $output)
+    private function configureFormatter(OutputFormatterInterface $formatter)
     {
         $errorStyle = new OutputFormatterStyle('red');
-        $output->getFormatter()->setStyle('error', $errorStyle);
+        $formatter->setStyle('error', $errorStyle);
 
         $warningStyle = new OutputFormatterStyle('yellow');
-        $output->getFormatter()->setStyle('warning', $warningStyle);
+        $formatter->setStyle('warning', $warningStyle);
     }
 
     /**
      * @param RequirementViolation $violation
      *
-     * @return string Formatted violation description displayed to user.
+     * @return string Formatted violation description displayed to user
      */
     private function getFormattedViolationDescription(RequirementViolation $violation)
     {
         $resultPattern = $violation->isRequired() ? '<error>%s</error>' : '<warning>%s</warning>';
         $displayedText = $violation->getLabel();
-        $displayedText .= $violation->getHelp() ? ' ' . $violation->getHelp() : '';
+        $displayedText .= $violation->getHelp() ? ' '.$violation->getHelp() : '';
 
         return sprintf($resultPattern, $displayedText);
     }
-
 }

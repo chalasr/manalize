@@ -13,5 +13,4 @@ namespace Manala\Config\Requirement\Exception;
 
 class MissingRequirementException extends \Exception
 {
-
 }

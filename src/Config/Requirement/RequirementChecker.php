@@ -11,12 +11,12 @@
 
 namespace Manala\Config\Requirement;
 
+use Composer\Semver\Semver;
 use Manala\Config\Requirement\Exception\MissingRequirementException;
 use Manala\Config\Requirement\Factory\HandlerFactoryResolver;
 use Manala\Config\Requirement\Violation\RequirementViolation;
 use Manala\Config\Requirement\Violation\RequirementViolationLabelBuilder;
 use Manala\Config\Requirement\Violation\RequirementViolationList;
-use Composer\Semver\Semver;
 
 /**
  * Service that checks if the current host's environment satisfies a requirement.

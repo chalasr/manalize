@@ -18,6 +18,6 @@ class BinaryProcessor extends AbstractProcessor
      */
     public function getCommand($name)
     {
-        return sprintf("%s --version", $name);
+        return sprintf('%s --version', $name);
     }
 }

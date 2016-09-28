@@ -11,7 +11,7 @@
 
 namespace Manala\Config\Requirement\Common;
 
-class RequirementLevel
+final class RequirementLevel
 {
     const REQUIRED = 1;
     const RECOMMENDED = 2;
