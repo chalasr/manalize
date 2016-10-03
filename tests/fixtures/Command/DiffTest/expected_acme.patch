@@ -1,0 +1,165 @@
+diff --git a/./Makefile b/./Makefile
+index 7c8ed21..bdee98d 100755
+--- a/./Makefile
++++ b/./Makefile
+@@ -31,6 +31,21 @@ setup:
+ 	vagrant provision
+ 	vagrant ssh -- "cd /srv/app && make install"
+ 
++## Update environment
++update: export ANSIBLE_TAGS = manala.update
++update:
++	vagrant provision
++
++## Update ansible
++update-ansible: export ANSIBLE_TAGS = manala.update
++update-ansible:
++	vagrant provision --provision-with ansible
++
++## Provision environment
++provision: export ANSIBLE_EXTRA_VARS = {"manala":{"update":false}}
++provision:
++	vagrant provision --provision-with app
++
+ ## Provision nginx
+ provision-nginx: export ANSIBLE_TAGS = manala_nginx
+ provision-nginx: provision
+@@ -83,5 +98,26 @@ install@prod:
+ 	bin/console doctrine:migrations:migrate --no-debug --no-interaction
+ 
+ ##########
++# Assets #
++##########
++
++## Build assets
++assets:
++	if [ -f "gulpfile" ]; then gulp --dev; fi;
++
++assets@prod: SYMFONY_ENV = prod
++assets@prod:
++	if [ -f "gulpfile" ]; then gulp; fi;
++
++##########
++# Deploy #
++##########
++
++## Deploy application
++deploy: deploy@prod
++deploy@prod:
++	ansible-playbook ansible/deploy.yml --inventory-file=ansible/hosts --limit=deploy_prod
++
++##########
+ # Custom #
+ ##########
+diff --git a/./ansible/ansible.yml b/./ansible/ansible.yml
+index e4e2931..e4a030f 100644
+--- a/./ansible/ansible.yml
++++ b/./ansible/ansible.yml
+@@ -6,6 +6,7 @@
+   vars:
+     manala_ansible_galaxy_roles:
+       - manala.ansible-galaxy
++      - manala.deploy
+       - manala.skeleton
+   roles:
+     - manala.ansible-galaxy
+@@ -17,5 +18,6 @@
+     manala_ansible_galaxy_roles_path: "{{ playbook_dir }}/roles"
+     manala_ansible_galaxy_roles:
+       - manala.ansible-galaxy
++      - manala.deploy
+   roles:
+     - manala.ansible-galaxy
+diff --git a/./ansible/deploy.yml b/./ansible/deploy.yml
+new file mode 100644
+index 0000000..9ab9e15
+--- /dev/null
++++ b/./ansible/deploy.yml
+@@ -0,0 +1,6 @@
++---
++
++- hosts: deploy
++  gather_facts: false
++  roles:
++    - manala.deploy
+diff --git a/./ansible/group_vars/deploy.yml b/./ansible/group_vars/deploy.yml
+new file mode 100644
+index 0000000..74d82ba
+--- /dev/null
++++ b/./ansible/group_vars/deploy.yml
+@@ -0,0 +1,49 @@
++---
++
++#######
++# Dir #
++#######
++
++manala_deploy_dir: /srv/app
++
++############
++# Releases #
++############
++
++manala_deploy_releases: 5
++
++############
++# Strategy #
++############
++
++manala_deploy_strategy: git
++
++manala_deploy_strategy_git_repo:    "{{ lookup('pipe','git ls-remote --get-url origin') }}"
++manala_deploy_strategy_git_version: master
++
++##########
++# Copied #
++##########
++
++manala_deploy_copied:
++  - vendor
++  - node_modules
++
++##########
++# Shared #
++##########
++
++manala_deploy_shared_files:
++  - app/config/parameters.yml
++
++manala_deploy_shared_dirs:
++  - var/logs
++
++############
++# Writable #
++############
++
++manala_deploy_writable_dirs_mode: ug=rwx,o=rx
++manala_deploy_writable_dirs:
++  - var/cache
++  - var/logs
+diff --git a/./ansible/group_vars/deploy_prod.yml b/./ansible/group_vars/deploy_prod.yml
+new file mode 100644
+index 0000000..ff08b94
+--- /dev/null
++++ b/./ansible/group_vars/deploy_prod.yml
+@@ -0,0 +1,19 @@
++
++---
++
++###########
++# Removed #
++###########
++
++manala_deploy_removed:
++  - web/app_dev.php
++  - web/app_test.php
++
++#########
++# Tasks #
++#########
++
++manala_deploy_tasks:
++  - make: install@prod
++  - make: assets@prod
++  - service_restart: supervisor
+
