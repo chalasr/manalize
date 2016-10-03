@@ -45,7 +45,7 @@ class Build
         $vagrantTasks = [
             'up --no-provision',
             'provision',
-            'ssh -- "cd /srv/app && make install"',
+            'ssh -- "cd /srv/app && composer install --verbose && bin/console doctrine:database:create --if-not-exists"',
         ];
 
         $this->createSubProcesses($vagrantTasks, $cwd);
