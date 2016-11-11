@@ -23,6 +23,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -59,7 +60,7 @@ class Setup extends Command
             throw new \RuntimeException(sprintf('The working directory "%s" doesn\'t exist.', $cwd));
         }
 
-        $io = new SymfonyStyle($input, $output);
+        $io = new SymfonyStyle($input, $output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output);
         $io->setDecorated(true);
         $io->comment(sprintf('Start composing your <info>%s</info> environment', (string) $envName));
 

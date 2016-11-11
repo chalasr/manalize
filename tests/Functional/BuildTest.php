@@ -54,7 +54,7 @@ class BuildTest extends TestCase
 
     public static function tearDownAfterClass()
     {
-        (new Process(sprintf('cd %s && vagrant destroy --force && cd %s', self::$cwd, getcwd())))
+        (new Process('vagrant destroy --force', self::$cwd))
             ->setTimeout(null)
             ->run();
 
