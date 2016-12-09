@@ -1,26 +1,6 @@
 ---
 
-app_options:
-
-  php:                   {{ php_enabled }}
-  php_version:           '{{ php_version }}'
-  nodejs:                {{ nodejs_enabled }}
-  nodejs_version:        '{{ nodejs_version }}'
-  mysql:                 {{ mysql_enabled }}
-  mysql_version:         '{{ mysql_version }}'
-  mariadb:               {{ mariadb_enabled }}
-  mariadb_version:       '{{ mariadb_version }}'
-  postgresql:            {{ postgresql_enabled }}
-  postgresql_version:    '{{ postgresql_version }}'
-  redis:                 {{ redis_enabled }}
-  mongodb:               {{ mongodb_enabled }}
-  mongodb_version:       '{{ mongodb_version }}'
-  influxdb:              {{ influxdb_enabled }}
-  sqlite:                {{ sqlite_enabled }}
-  elasticsearch:         {{ elasticsearch_enabled }}
-  elasticsearch_version: '{{ elasticsearch_version }}'
-  java:                  {{ java_enabled }}
-
+{% include common/ansible/group_vars/app_options.yml %}
 app_patterns:
 
   ############

@@ -39,12 +39,23 @@ class Renderer
         }
 
         $vars = $config->getVars();
-        $rendered = file_get_contents($template);
+        $rendered = self::renderIncludes(file_get_contents($template));
 
         foreach ($vars as $var) {
             $rendered = strtr($rendered, $var->getReplaces());
         }
 
         return $rendered;
+    }
+
+    private static function renderIncludes(string $template)
+    {
+        preg_match_all('/{% include (.*) %}/', $template, $matches);
+
+        foreach ($matches[1] as $include) {
+            $template = str_replace("{% include $include %}", file_get_contents(MANALIZE_DIR.'/src/Resources/'.$include), $template);
+        }
+
+        return $template;
     }
 }

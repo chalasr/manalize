@@ -44,7 +44,7 @@ class SetupTest extends TestCase
         $tester = new CommandTester(new Setup());
         $tester
             ->setInputs($inputs)
-            ->execute(['cwd' => static::$cwd]);
+            ->execute(['cwd' => static::$cwd, '--env' => 'symfony']);
 
         if (0 !== $tester->getStatusCode()) {
             echo $tester->getDisplay();
@@ -100,7 +100,7 @@ class SetupTest extends TestCase
         $tester = new CommandTester(new Setup());
         $tester
             ->setInputs(["\n", "\n"])
-            ->execute(['cwd' => static::$cwd, '--no-update' => true]);
+            ->execute(['cwd' => static::$cwd, '--no-update' => true, '--env' => 'symfony']);
 
         if (0 !== $tester->getStatusCode()) {
             echo $tester->getDisplay();
@@ -124,7 +124,7 @@ class SetupTest extends TestCase
         $tester = new CommandTester(new Setup());
         $tester
             ->setInputs(["\n", "\n", '0']) // patch strategy
-            ->execute(['cwd' => self::$cwd]);
+            ->execute(['cwd' => self::$cwd, '--env' => 'symfony']);
 
         if (0 !== $tester->getStatusCode()) {
             echo $tester->getDisplay();
