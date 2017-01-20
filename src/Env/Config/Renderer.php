@@ -11,8 +11,6 @@
 
 namespace Manala\Manalize\Env\Config;
 
-use Manala\Manalize\Env\Config\Variable\Variable;
-
 /**
  * Config' template renderer.
  *
@@ -31,9 +29,12 @@ class Renderer
     {
         $twig = new \Twig_Environment(
             new \Twig_Loader_Filesystem(['/', MANALIZE_DIR.'/src/Resources'], '/'),
-            ['cache' => self::TEMPLATE_CACHE_DIR]
+            ['cache' => self::TEMPLATE_CACHE_DIR, 'debug' => '' === \Phar::running()]
         );
-        $twig->setLexer(new \Twig_Lexer($twig, ['tag_comment' => ['[#', '#]'], 'tag_variable' => ['{#', '#}']]));
+
+        $twig->setLexer(
+            new \Twig_Lexer($twig, ['tag_comment' => ['[#', '#]'], 'tag_variable' => ['{#', '#}']])
+        );
 
         $this->twig = $twig;
     }
@@ -45,7 +46,7 @@ class Renderer
      *
      * @return string
      *
-     * @throws \InvalidArgumentException If the config template is not readable
+     * @throws \RuntimeException If the config template is not readable
      */
     public function render(Config $config): string
     {
@@ -58,27 +59,11 @@ class Renderer
             ));
         }
 
-        $allVars = $config->getVars();
-        $vars = array_map(function (Variable $var) {
-            return $var->getReplaces();
-        }, $allVars);
-
         $context = [];
         foreach ($config->getVars() as $var) {
             $context = array_merge($context, $var->getReplaces());
         }
 
         return $this->twig->render($template, $context);
-    }
-
-    private static function renderIncludes(string $template)
-    {
-        preg_match_all('/{% include (.*) %}/', $template, $matches);
-
-        foreach ($matches[1] as $include) {
-            $template = str_replace("{% include $include %}", file_get_contents(MANALIZE_DIR.'/src/Resources/'.$include), $template);
-        }
-
-        return $template;
     }
 }

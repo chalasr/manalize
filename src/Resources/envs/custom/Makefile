@@ -31,6 +31,7 @@ setup:
 	vagrant provision
 
 {% include('common/make/environment_tasks') %}
+
 ##########
 # Deploy #
 ##########
