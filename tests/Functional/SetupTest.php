@@ -44,7 +44,7 @@ class SetupTest extends TestCase
         $tester = new CommandTester(new Setup());
         $tester
             ->setInputs($inputs)
-            ->execute(['cwd' => static::$cwd, '--env' => 'symfony']);
+            ->execute(['cwd' => static::$cwd, '--env' => EnvName::SYMFONY]);
 
         if (0 !== $tester->getStatusCode()) {
             echo $tester->getDisplay();

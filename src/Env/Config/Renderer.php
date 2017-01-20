@@ -11,6 +11,9 @@
 
 namespace Manala\Manalize\Env\Config;
 
+use Manala\Manalize\Twig\FilesystemLoader;
+use Manala\Manalize\Twig\Lexer;
+
 /**
  * Config' template renderer.
  *
@@ -18,23 +21,17 @@ namespace Manala\Manalize\Env\Config;
  */
 class Renderer
 {
-    const TEMPLATE_CACHE_DIR = MANALIZE_DIR.'/var/cache';
-
-    /**
-     * @var \Twig_Environment
-     */
     private $twig;
 
-    public function __construct()
+    public function __construct(\Twig_Environment $twig = null)
     {
-        $twig = new \Twig_Environment(
-            new \Twig_Loader_Filesystem(['/', MANALIZE_DIR.'/src/Resources'], '/'),
-            ['cache' => self::TEMPLATE_CACHE_DIR, 'debug' => '' === \Phar::running()]
-        );
-
-        $twig->setLexer(
-            new \Twig_Lexer($twig, ['tag_comment' => ['[#', '#]'], 'tag_variable' => ['{#', '#}']])
-        );
+        if (null === $twig) {
+            $twig = new \Twig_Environment(new FilesystemLoader(), [
+                'debug' => $debug = '' === \Phar::running(),
+                'cache' => $debug ? MANALIZE_DIR.'/var/cache' : manala_get_tmp_dir(),
+            ]);
+            $twig->setLexer(new Lexer($twig));
+        }
 
         $this->twig = $twig;
     }

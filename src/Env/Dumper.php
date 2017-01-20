@@ -38,10 +38,10 @@ class Dumper
     private $renderer;
     private $fs;
 
-    public function __construct(string $workspace)
+    public function __construct(string $workspace, Renderer $renderer = null)
     {
         $this->workspace = $workspace;
-        $this->renderer = new Renderer();
+        $this->renderer = $renderer ?: new Renderer();
         $this->fs = new Filesystem();
     }
 
