@@ -34,7 +34,7 @@ class RendererTest extends \PHPUnit_Framework_TestCase
         $config->getVars()->willReturn([$var->reveal()]);
         $config->getTemplate()->willReturn(new \SplFileInfo(self::$tempdir.'/template'));
 
-        $this->assertSame('foo bar baz', Renderer::render($config->reveal()));
+        $this->assertSame('foo bar baz', (new Renderer())->render($config->reveal()));
     }
 
     public static function tearDownAfterClass()
