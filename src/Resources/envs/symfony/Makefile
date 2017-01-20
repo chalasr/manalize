@@ -34,7 +34,8 @@ setup:
 	vagrant provision
 	vagrant ssh -- "cd /srv/app && make install && make build"
 
-{% include common/make/environment_tasks %}
+{% include('common/make/environment_tasks') %}
+
 ###########
 # Install #
 ###########
@@ -86,7 +87,8 @@ build@prod:
 # Deploy #
 ##########
 
-{% include common/make/deploy_tasks %}
+{% include('common/make/deploy_tasks') %}
+
 ##########
 # Custom #
 ##########

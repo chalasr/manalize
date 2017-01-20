@@ -11,6 +11,8 @@
 
 namespace Manala\Manalize\Env\Config;
 
+use Manala\Manalize\Env\Config\Variable\Variable;
+
 /**
  * Config' template renderer.
  *
@@ -18,6 +20,24 @@ namespace Manala\Manalize\Env\Config;
  */
 class Renderer
 {
+    const TEMPLATE_CACHE_DIR = MANALIZE_DIR.'/var/cache';
+
+    /**
+     * @var \Twig_Environment
+     */
+    private $twig;
+
+    public function __construct()
+    {
+        $twig = new \Twig_Environment(
+            new \Twig_Loader_Filesystem(['/', MANALIZE_DIR.'/src/Resources'], '/'),
+            ['cache' => self::TEMPLATE_CACHE_DIR]
+        );
+        $twig->setLexer(new \Twig_Lexer($twig, ['tag_comment' => ['[#', '#]'], 'tag_variable' => ['{#', '#}']]));
+
+        $this->twig = $twig;
+    }
+
     /**
      * Renders a config template.
      *
@@ -38,14 +58,17 @@ class Renderer
             ));
         }
 
-        $vars = $config->getVars();
-        $rendered = self::renderIncludes(file_get_contents($template));
+        $allVars = $config->getVars();
+        $vars = array_map(function (Variable $var) {
+            return $var->getReplaces();
+        }, $allVars);
 
-        foreach ($vars as $var) {
-            $rendered = strtr($rendered, $var->getReplaces());
+        $context = [];
+        foreach ($config->getVars() as $var) {
+            $context = array_merge($context, $var->getReplaces());
         }
 
-        return $rendered;
+        return $this->twig->render($template, $context);
     }
 
     private static function renderIncludes(string $template)

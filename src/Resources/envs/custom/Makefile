@@ -30,9 +30,9 @@ setup:
 	vagrant up --no-provision
 	vagrant provision
 
-{% include common/make/environment_tasks %}
+{% include('common/make/environment_tasks') %}
 ##########
 # Deploy #
 ##########
 
-{% include common/make/deploy_tasks %}
+{% include('common/make/deploy_tasks') %}

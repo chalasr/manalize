@@ -49,7 +49,7 @@ class Dependency implements Variable
     public function getReplaces(): array
     {
         return [
-            sprintf('{{ %s_enabled }}', $this->getName()) => $this->isEnabled() ? 'true' : 'false',
+            sprintf('%s_enabled', $this->getName()) => $this->isEnabled() ? 'true' : 'false',
         ];
     }
 

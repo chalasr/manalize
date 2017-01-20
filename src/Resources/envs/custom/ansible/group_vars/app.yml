@@ -1,6 +1,6 @@
 ---
 
-{% include common/ansible/group_vars/app_options.yml %}
+{% include('common/ansible/group_vars/app_options.yml') %}
 
 app_patterns:
 

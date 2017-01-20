@@ -27,9 +27,9 @@ class RendererTest extends \PHPUnit_Framework_TestCase
 
     public function testRender()
     {
-        file_put_contents(self::$tempdir.'/template', 'foo {{ placeholder }} baz');
+        file_put_contents(self::$tempdir.'/template', 'foo {# placeholder #} baz');
         $var = $this->prophesize(Variable::class);
-        $var->getReplaces()->willReturn(['{{ placeholder }}' => 'bar']);
+        $var->getReplaces()->willReturn(['placeholder' => 'bar']);
         $config = $this->prophesize(Config::class);
         $config->getVars()->willReturn([$var->reveal()]);
         $config->getTemplate()->willReturn(new \SplFileInfo(self::$tempdir.'/template'));

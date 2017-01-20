@@ -1,1 +1,1 @@
-{% include common/Vagrantfile %}
+{% include('common/Vagrantfile') %}
