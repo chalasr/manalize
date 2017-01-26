@@ -23,10 +23,6 @@ class Dependency implements Variable
     protected $name;
     protected $enabled;
 
-    /**
-     * @param string $name
-     * @param bool   $enabled
-     */
     public function __construct(string $name, bool $enabled)
     {
         $this->name = $name;
