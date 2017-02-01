@@ -19,6 +19,7 @@ if (PHP_MAJOR_VERSION < 7) {
 }
 
 define('MANALIZE_DIR', __DIR__);
+define('MANALIZE_HOME', (getenv('MANALIZE_HOME') ?: $_SERVER['HOME']).'/.manala');
 define('MANALIZE_TMP_ROOT_DIR', sys_get_temp_dir().'/Manala');
 define('UPDATE_FIXTURES', filter_var(getenv('UPDATE_FIXTURES'), FILTER_VALIDATE_BOOLEAN));
 

@@ -21,6 +21,7 @@ use Manala\Manalize\Env\EnvGuesser\ChainEnvGuesser;
 use Manala\Manalize\Env\EnvName;
 use Manala\Manalize\Exception\HandlingFailureException;
 use Manala\Manalize\Handler\Setup as SetupHandler;
+use Manala\Manalize\Template\Syncer;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -45,7 +46,8 @@ class Setup extends Command
             ->setDescription('Configures your environment on top of Manala ansible roles')
             ->addArgument('cwd', InputArgument::OPTIONAL, 'The path of the application for which to setup the environment', getcwd())
             ->addOption('env', null, InputOption::VALUE_OPTIONAL, 'One of the supported environment types. Don\'t use this option for building a full custom environment', null)
-            ->addOption('no-update', null, InputOption::VALUE_NONE, 'If set, will only update metadata');
+            ->addOption('no-update', null, InputOption::VALUE_NONE, 'If set, will only update metadata')
+            ->addOption('template-url', null, InputOption::VALUE_REQUIRED);
     }
 
     /**
@@ -62,10 +64,13 @@ class Setup extends Command
         $io = new SymfonyStyle($input, $output);
         $io->setDecorated(true);
 
-        $envName = $this->getEnvName($input);
+        $envName = $this->getEnvName($input, $cwd);
         if ($envName->is(EnvName::CUSTOM)) {
             $envName = $this->guessEnvName($io, $cwd) ?: $envName;
         }
+
+        $syncer = new Syncer();
+        $syncer->sync();
 
         $io->comment(sprintf('Start composing your <info>%s</info> environment', (string) $envName));
 
@@ -98,7 +103,7 @@ class Setup extends Command
         return 0;
     }
 
-    private function getEnvName(InputInterface $input): EnvName
+    private function getEnvName(InputInterface $input, string $cwd): EnvName
     {
         if ($rawName = $input->getOption('env')) {
             if (!EnvName::accepts($rawName)) {
@@ -112,7 +117,9 @@ class Setup extends Command
             return EnvName::get($rawName);
         }
 
-        return EnvName::CUSTOM();
+            // TODO if (manala.yml) then { $envName = manala.yml['template'] } elif (!$input->get('env')) then { custom } else { $input->get('env') }
+
+            return EnvName::CUSTOM();
     }
 
     private function guessEnvName(SymfonyStyle $io, string $cwd)

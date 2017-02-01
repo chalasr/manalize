@@ -61,7 +61,7 @@ abstract class Config
      */
     public function getOrigin(): \SplFileInfo
     {
-        return new \SplFileInfo(MANALIZE_DIR.'/src/Resources/envs/'.$this->envName->getValue().'/'.$this->getPath());
+        return new \SplFileInfo(MANALIZE_HOME.'/templates/'.$this->envName->getValue().'/'.$this->getPath());
     }
 
     /**

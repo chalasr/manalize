@@ -122,7 +122,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         self::createSymfonyStandardProject($cwd);
 
         if (null === $envType) {
-            $envType = EnvName::SYMFONY();
+            $envType = EnvName::ELAO_SYMFONY();
         }
 
         self::manalizeProject($cwd, $appName, $envType, $dependencies);
