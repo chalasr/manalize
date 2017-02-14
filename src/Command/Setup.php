@@ -69,8 +69,14 @@ class Setup extends Command
             $envName = $this->guessEnvName($io, $cwd) ?: $envName;
         }
 
-        $syncer = new Syncer();
-        $syncer->sync();
+        try {
+            $syncer = new Syncer();
+            $syncer->sync();
+        } catch (\Throwable $e) {
+            $io->error('An error occured while syncing templates: '.$e->getMessage());
+
+            return 1;
+        }
 
         $io->comment(sprintf('Start composing your <info>%s</info> environment', (string) $envName));
 

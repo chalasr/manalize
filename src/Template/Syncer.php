@@ -33,7 +33,7 @@ final class Syncer
         $this->repository = $repository;
     }
 
-    public function sync(\Closure $notifier = null, $revision = null)
+    public function sync($revision = null)
     {
         if (!is_dir($this->templateDir)) {
             (new GitClone($this->repository, $this->templateDir))->run();
