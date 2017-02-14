@@ -23,6 +23,8 @@ class RendererTest extends \PHPUnit_Framework_TestCase
     {
         self::$tempdir = sys_get_temp_dir().'/ManalaRendererTest';
         @mkdir(self::$tempdir);
+
+        parent::setupBeforeClass();
     }
 
     public function testRender()
@@ -42,5 +44,7 @@ class RendererTest extends \PHPUnit_Framework_TestCase
         @unlink(self::$tempdir.'/template');
         @unlink(self::$tempdir.'/template.yml');
         @rmdir(self::$tempdir);
+
+        parent::tearDownAfterClass();
     }
 }

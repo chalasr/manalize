@@ -38,8 +38,14 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         (new Filesystem())->remove(MANALIZE_TMP_ROOT_DIR);
     }
 
+    public static function setupBeforeClass()
+    {
+        putenv('MANALIZE_HOME='.MANALIZE_TMP_ROOT_DIR);
+    }
+
     public static function tearDownAfterClass()
     {
+        putenv('MANALIZE_HOME=');
         self::$symfonyStandardCopyPath = null;
     }
 

@@ -132,6 +132,7 @@ class Setup extends Command
     {
         if (!$envName = (new ChainEnvGuesser())->guess(new \SplFileinfo($cwd))) {
             die('no env');
+
             return;
         }
 
