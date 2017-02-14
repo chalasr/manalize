@@ -131,6 +131,7 @@ class Setup extends Command
     private function guessEnvName(SymfonyStyle $io, string $cwd)
     {
         if (!$envName = (new ChainEnvGuesser())->guess(new \SplFileinfo($cwd))) {
+            die('no env');
             return;
         }
 

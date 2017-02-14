@@ -33,7 +33,7 @@ final class EnvName extends ReadableEnum
     public static function readables(): array
     {
         return [
-            self::ELAO_SYMFONY => ucfirst(self::ELAO_SYMFONY),
+            self::ELAO_SYMFONY => 'Elao Symfony',
             self::CUSTOM => ucfirst(self::CUSTOM),
         ];
     }
