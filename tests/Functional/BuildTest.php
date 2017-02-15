@@ -32,8 +32,6 @@ class BuildTest extends TestCase
             $envType,
             self::enableDependency(self::getDefaultDependenciesForEnv($envType), 'mysql')
         );
-
-        parent::setupBeforeClass();
     }
 
     public function testExecute()

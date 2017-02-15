@@ -33,8 +33,6 @@ class DiffTest extends TestCase
         file_put_contents($cwd.'/Makefile', " \n This line is expected in the patch", FILE_APPEND);
 
         self::$cwd = $cwd;
-
-        parent::setupBeforeClass();
     }
 
     public function testExecute()

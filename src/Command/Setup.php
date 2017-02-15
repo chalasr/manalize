@@ -47,7 +47,7 @@ class Setup extends Command
             ->addArgument('cwd', InputArgument::OPTIONAL, 'The path of the application for which to setup the environment', getcwd())
             ->addOption('env', null, InputOption::VALUE_OPTIONAL, 'One of the supported environment types. Don\'t use this option for building a full custom environment', null)
             ->addOption('no-update', null, InputOption::VALUE_NONE, 'If set, will only update metadata')
-            ->addOption('template-url', null, InputOption::VALUE_REQUIRED);
+        ;
     }
 
     /**
@@ -131,8 +131,6 @@ class Setup extends Command
     private function guessEnvName(SymfonyStyle $io, string $cwd)
     {
         if (!$envName = (new ChainEnvGuesser())->guess(new \SplFileinfo($cwd))) {
-            die('no env');
-
             return;
         }
 

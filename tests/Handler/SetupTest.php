@@ -24,8 +24,6 @@ class SetupTest extends \PHPUnit_Framework_TestCase
     public static function setUpBeforeClass()
     {
         self::$cwd = manala_get_tmp_dir('tests_setup_handler_');
-
-        parent::setupBeforeClass();
     }
 
     public function provideHandleData()
