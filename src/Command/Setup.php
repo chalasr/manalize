@@ -20,6 +20,7 @@ use Manala\Manalize\Env\Dumper;
 use Manala\Manalize\Env\EnvGuesser\ChainEnvGuesser;
 use Manala\Manalize\Env\EnvName;
 use Manala\Manalize\Exception\HandlingFailureException;
+use Manala\Manalize\Exception\InvalidConfigurationException;
 use Manala\Manalize\Handler\Setup as SetupHandler;
 use Manala\Manalize\Template\Syncer;
 use Symfony\Component\Console\Command\Command;
@@ -28,6 +29,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Setups a full stack environment on top of Manala' ansible roles.
@@ -123,9 +125,21 @@ class Setup extends Command
             return EnvName::get($rawName);
         }
 
-            // TODO if (manala.yml) then { $envName = manala.yml['template'] } elif (!$input->get('env')) then { custom } else { $input->get('env') }
+        if (is_readable($dotfile = $cwd.'/manala.yml')) {
+            $rawConfig = Yaml::parse(file_get_contents($dotfile));
 
-            return EnvName::CUSTOM();
+            if (!isset($rawConfig['template'])) {
+                throw new InvalidConfigurationException("The $dotfile file must contain a \"template\" key.");
+            }
+
+            if (!EnvName::accepts($templateName = $rawConfig['template']['name'])) {
+                throw new InvalidConfigurationException(sprintf('There is no env called "%s". Possilble envs are [%s]', $templateName, implode(', ', EnvName::values())));
+            }
+
+            return EnvName::get($templateName);
+        }
+
+        return EnvName::CUSTOM();
     }
 
     private function guessEnvName(SymfonyStyle $io, string $cwd)
