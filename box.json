@@ -7,7 +7,7 @@
       "in": "vendor"
     }
   ],
-  "files": ["src/bootstrap.php", "LICENSE"],
+  "files": ["bootstrap.php", "LICENSE"],
   "compactors": "Herrera\\Box\\Compactor\\Php",
   "compression": "GZ",
   "main": "bin/manalize",
