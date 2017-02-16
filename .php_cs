@@ -12,7 +12,7 @@ EOF;
 
 $finder = PhpCsFixer\Finder::create()
     ->in([__DIR__.'/src', __DIR__.'/tests', __DIR__.'/bin'])
-    ->exclude('tests/fixtures')
+    ->exclude(__DIR__.'/tests/fixtures', __DIR__.'/tests/var')
 ;
 
 return PhpCsFixer\Config::create()
