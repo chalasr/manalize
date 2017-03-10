@@ -13,6 +13,7 @@ namespace Manala\Manalize\Template;
 
 use Manala\Manalize\Process\GitCheckout;
 use Manala\Manalize\Process\GitClone;
+use Manala\Manalize\Process\GitFetch;
 use Manala\Manalize\Process\GitRevList;
 use Manala\Manalize\Process\GitRevParse;
 use Symfony\Component\Filesystem\Filesystem;
@@ -22,7 +23,7 @@ final class Syncer
     private $templateDir;
     private $fs;
     private $latestRevision;
-    private $respository;
+    private $repository;
 
     const DEFAULT_REPOSITORY = 'https://github.com/manala/manalize-templates';
 
@@ -68,6 +69,8 @@ final class Syncer
         if (null !== $this->latestRevision) {
             return $this->latestRevision;
         }
+
+        (new GitFetch($this->templateDir))->run();
 
         $getLastTag = new GitRevList($this->templateDir);
         $getLastTag->run();

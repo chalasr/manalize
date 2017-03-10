@@ -71,7 +71,7 @@ abstract class Config
      */
     public function getTemplate(): \SplFileInfo
     {
-        return $this->getOrigin();
+        return new \SplFileInfo((string) $this->getOrigin().'.twig');
     }
 
     /**
