@@ -1,12 +1,12 @@
 app:
-    name: manalized-app
+    name: foo-bar.manala
     template: elao-symfony
 system:
     cpus: 1
     memory: 2048
     php:
         enabled: true
-        version: '7.0'
+        version: '5.6'
     mysql:
         enabled: true
         version: '5.6'

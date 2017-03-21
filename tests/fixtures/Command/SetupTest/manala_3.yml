@@ -1,5 +1,5 @@
 app:
-    name: manalized-app
+    name: foo-bar.manala
     template: elao-symfony
 system:
     cpus: 1

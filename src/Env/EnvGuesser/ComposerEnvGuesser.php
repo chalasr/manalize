@@ -33,6 +33,10 @@ class ComposerEnvGuesser implements EnvGuesserInterface
             $config = $this->findComposerDotJson($config);
         }
 
+        if (!$config) {
+            return;
+        }
+
         $rawConfig = json_decode(file_get_contents($config), true);
 
         if (!isset($rawConfig['require'])) {
@@ -62,6 +66,6 @@ class ComposerEnvGuesser implements EnvGuesserInterface
     {
         $expectedPath = "$directory/composer.json";
 
-        return !is_file($expectedPath) ?: new \SplFileInfo("$directory/composer.json");
+        return !is_file($expectedPath) ? false : new \SplFileInfo("$directory/composer.json");
     }
 }
