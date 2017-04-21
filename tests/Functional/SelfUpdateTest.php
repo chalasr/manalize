@@ -57,10 +57,10 @@ class SelfUpdateTest extends TestCase
         $this->assertTrue($process->isSuccessful());
 
         if ('v'.Application::VERSION === $latestTag) {
-            return $this->assertContains("manalize is already up to date ($latestTag)", $process->getOutput());
+            return $this->assertContains("manalize is already up to date ($latestTag)", $process->getErrorOutput());
         }
 
-        $this->assertContains("manalize successfully updated to $latestTag", $process->getOutput());
+        $this->assertContains("manalize successfully updated to $latestTag", $process->getErrorOutput());
     }
 
     public function testExecuteWithAlreadyUpToDateBuild()

@@ -18,7 +18,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -104,7 +104,7 @@ EOTXT
 
     private function getErrorIo(InputInterface $input, OutputInterface $output)
     {
-        if (!$output instanceof ConsoleOutput) {
+        if (!$output instanceof ConsoleOutputInterface) {
             return new SymfonyStyle($input, new NullOutput());
         }
 

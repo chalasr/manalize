@@ -15,6 +15,7 @@ use Manala\Manalize\Exception\HandlingFailureException;
 use Manala\Manalize\Handler\SelfUpdate as SelfUpdateHandler;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -42,7 +43,7 @@ class SelfUpdate extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $io = new SymfonyStyle($input, $output);
+        $io = new SymfonyStyle($input, $output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output);
 
         if ('' === \Phar::running()) {
             $io->error('Self-update is available only for PHAR installation.');
