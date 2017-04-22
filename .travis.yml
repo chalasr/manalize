@@ -21,6 +21,7 @@ cache:
         - $HOME/.composer/cache
 
 before_install:
+    - git --version
     - sudo add-apt-repository -y ppa:git-core/ppa
     - sudo apt-get update && sudo apt-get install git-man && sudo apt-get install -y git
     - git --version
