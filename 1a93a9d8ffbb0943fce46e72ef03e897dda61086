@@ -1,0 +1,12 @@
+---------------------------------------------------------------------------
+
+by NicolasDievart at 2017-12-13T10:35:47Z
+
+@ogizanagi No vendor option then ?
+
+---------------------------------------------------------------------------
+
+by ogizanagi at 2017-12-13T10:39:50Z
+
+That's only a quick-win until we provide a better feature to choose it.
+It'll have an impact on the cli command, metadata and need to introduce a new var in the Vagrantfile template.
