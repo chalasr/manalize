@@ -1,0 +1,26 @@
+---------------------------------------------------------------------------
+
+by NicolasDievart at 2017-12-12T13:23:04Z
+
+Could add an entry here ? https://github.com/manala/manalize/blob/master/tests/Env/Config/Variable/VagrantBoxVersionResolverTest.php#L24
+
+And the setup tests ?
+
+And maybe .travis.yml too ?
+
+---------------------------------------------------------------------------
+
+by chalasr at 2017-12-12T13:47:04Z
+
+> Could add an entry here ? https://github.com/manala/manalize/blob/master/tests/Env/Config/Variable/VagrantBoxVersionResolverTest.php#L24
+
+nice catch! done
+
+> And the setup tests ?
+
+done already, see updated fixtures
+
+> And maybe .travis.yml too ?
+
+unrelated but would have to be done anyways, done.
+Thanks @NicolasDievart
