@@ -1,0 +1,12 @@
+---------------------------------------------------------------------------
+
+by ogizanagi at 2018-04-04T15:59:22Z
+
+@NicolasDievart : You can already use Flex with 3.4 projects and it's actually the recommended way.
+Also keep in mind Manalize is for new projects init (but you can also follow changes through the diff command). So it's not an issue for old projects still using the symfony-standard edition skeleton.
+
+---------------------------------------------------------------------------
+
+by NicolasDievart at 2018-04-04T16:00:39Z
+
+@ogizanagi Yes, sorry, removed my comment after consulting the doc that said to introduce flex as soon as 3.3, my bad
