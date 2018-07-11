@@ -32,7 +32,7 @@ packages:
         enabled:    false
     sqlite:
         required:   false
-        enabled:    true
+        enabled:    false
     elasticsearch:
         enabled:    false
         required:   false

@@ -19,7 +19,7 @@ app_options:
   redis:                 false
   influxdb:              false
   java:                  false
-  sqlite:                true
+  sqlite:                false
 
 app_patterns:
 
