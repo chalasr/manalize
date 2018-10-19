@@ -4,6 +4,13 @@
 
 app_patterns:
 
+  #######
+  # Apt #
+  #######
+
+  apt_packages:
+    - unzip
+
   ############
   # Timezone #
   ############
