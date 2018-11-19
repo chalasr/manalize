@@ -1,0 +1,13 @@
+---------------------------------------------------------------------------
+
+by ogizanagi at 2018-11-19T14:02:57Z
+
+There are some more: https://github.com/manala/manalize/search?q=gather_facts&unscoped_q=gather_facts
+
+tests will fail since the expectations aren't updated :)
+
+---------------------------------------------------------------------------
+
+by nervo at 2018-11-19T14:20:20Z
+
+Ooops, you're right, i forgot 1 commit somewhere...
